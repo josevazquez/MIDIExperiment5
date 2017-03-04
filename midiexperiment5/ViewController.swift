@@ -47,6 +47,7 @@ class ViewController: NSViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        setup()
     }
 
     override var representedObject: Any? {
@@ -55,6 +56,127 @@ class ViewController: NSViewController {
         }
     }
 
+    var midiClient: MIDIClientRef = 0
+    var outPort:MIDIPortRef = 0
+    var inPort:MIDIPortRef = 0
 
+    var entity:MIDIEndpointRef = 0
+    var source:MIDIEndpointRef = 0
+    var destination:MIDIEndpointRef = 0
+    
+    func receiveMidiMessage(a:UInt8, b:UInt8, c:UInt8) {
+        print("MIDI Message: /(a) /(b) /(c)")
+    }
+    
+    func setup() {
+        var status:OSStatus
+        status = MIDIClientCreateWithBlock("TomboClient" as CFString, &midiClient) {
+            midiNotification in
+            print("Yay, got a message")
+        }
+        guard status == noErr else {
+            print("Error in: MIDIClientCreateWithBlock")
+            return
+        }
+        
+        status = MIDIInputPortCreateWithBlock(midiClient, "InputPort" as CFString, &inPort) {
+            (packetListPointer, sourceReferencePointer) in
+
+            let packetList:MIDIPacketList = packetListPointer.pointee
+
+            let packetsPointer = pointerToLastField(ptr: packetListPointer, lastFieldType: type(of:packetList.packet),
+                                                    outType: MIDIPacket.self, capacity: Int(packetList.numPackets))
+            let dataPointer = pointerToLastField(ptr: packetsPointer, lastFieldType: type(of:packetsPointer.pointee.data),
+                                                 outType: UInt8.self, capacity: 3)
+            
+            self.receiveMidiMessage(a:dataPointer[0], b:dataPointer[1], c:dataPointer[2])
+        }
+        guard status == noErr else {
+            print("Error in: MIDIInputPortCreateWithBlock")
+            return
+        }
+        
+        status = MIDIOutputPortCreate(midiClient, "OutputPort" as CFString, &outPort)
+        guard status == noErr else {
+            print("Error in: MIDIInputPortCreateWithBlock")
+            return
+        }
+        
+        let deviceIndecies = 0..<MIDIGetNumberOfDevices()
+        let devices = deviceIndecies.map { MIDIGetDevice($0) }
+        var name: String = "Error"
+        var launchPadPro:MIDIDeviceRef = 0
+        print("indecies = \(deviceIndecies.count)")
+        print(MIDIGetNumberOfDevices())
+        
+        for device in devices {
+//            var param: Unmanaged<CFString>?
+//            if MIDIObjectGetStringProperty(device, kMIDIPropertyName, &param) == noErr {
+//                name = param?.takeRetainedValue() as! String
+//            }
+            name = device.name ?? "Error"
+            print("[\(device)]: \(name)")
+            if name == kLaunchPadPro {
+                launchPadPro = device
+                break
+            }
+        }
+        guard name == kLaunchPadPro else {
+            print("Error in: Search for LaunchPad Pro device")
+            return
+        }
+        
+        entity = MIDIDeviceGetEntity(launchPadPro, 0)
+        source = MIDIEntityGetSource(entity, 0)
+        destination = MIDIEntityGetDestination(entity, 0)
+        print("passed the guantlet")
+        MIDIPortConnectSource(inPort, source, nil)
+    }
 }
+
+
+/*
+
+    NSString *myDeviceName = @"Launchpad Pro";
+    MIDIDeviceRef myDevice = 0;
+    
+    int numberOfDevices = (int)MIDIGetNumberOfDevices();
+    
+    for (int i = 0; i < numberOfDevices; i++) {
+    MIDIDeviceRef device = MIDIGetDevice(i);
+    
+    if (device) {
+    CFStringRef name;
+    
+    if (MIDIObjectGetStringProperty(device, kMIDIPropertyName, &name) == noErr) {
+    NSString *deviceName = (__bridge NSString *)name;
+    NSLog(@"DEVICE: %@", deviceName);
+    if ([myDeviceName isEqualToString:deviceName]) {
+    myDevice = device;
+    NSLog(@"MATCH");
+    
+    CFRelease(name);
+    
+    break;
+    }
+    }
+    
+    CFRelease(name);
+    }
+    }
+    
+    
+    
+    entity = MIDIDeviceGetEntity(myDevice, 0);
+    source = MIDIEntityGetSource(entity, 0);
+    
+    MIDIPortConnectSource(inputPort, source, NULL);
+    
+    destination = MIDIEntityGetDestination(entity, 0);
+    
+    [self setCurrentColor:72];
+    pickingState = notPicking;
+    
+    }
+} // */
 
