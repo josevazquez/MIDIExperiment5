@@ -13,6 +13,7 @@
 		82ACDFC61E5D244800ADFAE4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82ACDFC41E5D244800ADFAE4 /* Main.storyboard */; };
 		82ACDFD11E5D244800ADFAE4 /* midiexperiment5Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ACDFD01E5D244800ADFAE4 /* midiexperiment5Tests.swift */; };
 		82ACDFDC1E5D244800ADFAE4 /* midiexperiment5UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ACDFDB1E5D244800ADFAE4 /* midiexperiment5UITests.swift */; };
+		82C6D6CE1E665EA40061BBD9 /* MIDIObjectRef+seed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82C6D6CD1E665EA40061BBD9 /* MIDIObjectRef+seed.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +46,7 @@
 		82ACDFD71E5D244800ADFAE4 /* midiexperiment5UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = midiexperiment5UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		82ACDFDB1E5D244800ADFAE4 /* midiexperiment5UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = midiexperiment5UITests.swift; sourceTree = "<group>"; };
 		82ACDFDD1E5D244800ADFAE4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		82C6D6CD1E665EA40061BBD9 /* MIDIObjectRef+seed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MIDIObjectRef+seed.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +99,7 @@
 			children = (
 				82ACDFBE1E5D244800ADFAE4 /* AppDelegate.swift */,
 				82ACDFC01E5D244800ADFAE4 /* ViewController.swift */,
+				82C6D6CD1E665EA40061BBD9 /* MIDIObjectRef+seed.swift */,
 				82ACDFC21E5D244800ADFAE4 /* Assets.xcassets */,
 				82ACDFC41E5D244800ADFAE4 /* Main.storyboard */,
 				82ACDFC71E5D244800ADFAE4 /* Info.plist */,
@@ -260,6 +263,7 @@
 			files = (
 				82ACDFC11E5D244800ADFAE4 /* ViewController.swift in Sources */,
 				82ACDFBF1E5D244800ADFAE4 /* AppDelegate.swift in Sources */,
+				82C6D6CE1E665EA40061BBD9 /* MIDIObjectRef+seed.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -400,6 +404,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = LPZJ6QM7T8;
 				INFOPLIST_FILE = midiexperiment5/Info.plist;
@@ -414,6 +419,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = LPZJ6QM7T8;
 				INFOPLIST_FILE = midiexperiment5/Info.plist;
@@ -505,6 +511,7 @@
 				82ACDFE21E5D244800ADFAE4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		82ACDFE31E5D244800ADFAE4 /* Build configuration list for PBXNativeTarget "midiexperiment5Tests" */ = {
 			isa = XCConfigurationList;
@@ -513,6 +520,7 @@
 				82ACDFE51E5D244800ADFAE4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		82ACDFE61E5D244800ADFAE4 /* Build configuration list for PBXNativeTarget "midiexperiment5UITests" */ = {
 			isa = XCConfigurationList;
@@ -521,6 +529,7 @@
 				82ACDFE81E5D244800ADFAE4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
