@@ -11,19 +11,20 @@ import CoreMIDI
 
 let kLaunchPadPro = "Launchpad Pro"
 
-struct S {
-    var a: Int
-    var b: Int
-    var c: (UInt8, UInt8)
-}
 
+
+//struct S {
+//    var a: Int
+//    var b: Int
+//    var c: (UInt8, UInt8)
+//}
+//
 //let mem = malloc(42).bindMemory(to: UInt8.self, capacity: 42)
-
+//
 //memset(mem, 1, 42)
-
+//
 //let sptr = UnsafeRawPointer(mem).bindMemory(to: S.self, capacity: 1)
 //print(sptr.pointee)
-
 
 func pointerToLastField<StructType, LastFieldType, OutType>(ptr: UnsafePointer<StructType>, lastFieldType: LastFieldType.Type, outType: OutType.Type, capacity: Int) -> UnsafePointer<OutType> {
     let structSize = MemoryLayout<StructType>.size
@@ -36,17 +37,15 @@ func pointerToLastField<StructType, LastFieldType, OutType>(ptr: UnsafePointer<S
     return converted
 }
 
-
-
 //let lastPtr = pointerToLastField(ptr: sptr, lastFieldType: type(of: sptr.pointee.c), outType: UInt8.self, capacity: 20)
 //print(lastPtr[0], lastPtr[1], lastPtr[2])
+
+
 
 class ViewController: NSViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
         setup()
     }
 
@@ -65,14 +64,18 @@ class ViewController: NSViewController {
     var destination:MIDIEndpointRef = 0
     
     func receiveMidiMessage(a:UInt8, b:UInt8, c:UInt8) {
-        print("MIDI Message: /(a) /(b) /(c)")
+        print("MIDI Message: \(a) \(b) \(c)")
     }
     
     func setup() {
         var status:OSStatus
         status = MIDIClientCreateWithBlock("TomboClient" as CFString, &midiClient) {
-            midiNotification in
-            print("Yay, got a message")
+            midiNotificationPointer in
+            let midiNotification = midiNotificationPointer.pointee
+            print("Yay, got a message ----")
+            print("  ID  : \(midiNotification.messageID)")
+            print("  size: \(midiNotification.messageSize)")
+            print("-----------------------")
         }
         guard status == noErr else {
             print("Error in: MIDIClientCreateWithBlock")
@@ -95,25 +98,26 @@ class ViewController: NSViewController {
             print("Error in: MIDIInputPortCreateWithBlock")
             return
         }
-        
+
         status = MIDIOutputPortCreate(midiClient, "OutputPort" as CFString, &outPort)
         guard status == noErr else {
             print("Error in: MIDIInputPortCreateWithBlock")
             return
         }
-        
+
         let deviceIndecies = 0..<MIDIGetNumberOfDevices()
         let devices = deviceIndecies.map { MIDIGetDevice($0) }
         var name: String = "Error"
         var launchPadPro:MIDIDeviceRef = 0
         print("indecies = \(deviceIndecies.count)")
         print(MIDIGetNumberOfDevices())
+
+        for device in devices {
+            print("=====================\n")
+            print(device.description)
+        }
         
         for device in devices {
-//            var param: Unmanaged<CFString>?
-//            if MIDIObjectGetStringProperty(device, kMIDIPropertyName, &param) == noErr {
-//                name = param?.takeRetainedValue() as! String
-//            }
             name = device.name ?? "Error"
             print("[\(device)]: \(name)")
             if name == kLaunchPadPro {
@@ -127,13 +131,18 @@ class ViewController: NSViewController {
         }
         
         entity = MIDIDeviceGetEntity(launchPadPro, 0)
+        print("Entitiy = \(entity.description)")
+        
         source = MIDIEntityGetSource(entity, 0)
+        print("Source = \(source.description)")
+
+        print("inPort = \(inPort.description)")
+        
         destination = MIDIEntityGetDestination(entity, 0)
         print("passed the guantlet")
         MIDIPortConnectSource(inPort, source, nil)
     }
 }
-
 
 /*
 
