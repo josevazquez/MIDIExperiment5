@@ -12,6 +12,16 @@ import CoreMIDI
 
 extension MIDIObjectRef {
     
+    var description: String {
+        var d = ""
+        d += "name: \(self.name ?? "") \n"
+        d += "manufacturer: \(self.manufacturer ?? "") \n"
+        d += "model: \(self.model ?? "") \n"
+
+        d += "displayName: \(self.displayName ?? "") \n"
+        return d
+    }
+
     private func string(for property:CFString) -> String? {
         var param: Unmanaged<CFString>?
         if MIDIObjectGetStringProperty(self, property, &param) == noErr {
@@ -145,8 +155,8 @@ extension MIDIObjectRef {
     /// entity/endpoint property, integer
     
     /// 0 if there are external MIDI connectors, 1 if not.
-    var isEmbeddedEntity : Int? {
-        return int(for: kMIDIPropertyIsEmbeddedEntity)
+    var isEmbeddedEntity : Bool? {
+        return int(for: kMIDIPropertyIsEmbeddedEntity) == 1
     }
 
     
@@ -154,8 +164,8 @@ extension MIDIObjectRef {
     
     /// 1 if the endpoint broadcasts messages to all of the other endpoints in the device, 0 if
     /// not.  Set by the owning driver; should not be touched by other clients.
-    var propertyIsBroadcast : Int? {
-        return int(for: kMIDIPropertyIsBroadcast)
+    var isBroadcast : Bool? {
+        return int(for: kMIDIPropertyIsBroadcast) == 1
     }
   
     
@@ -201,8 +211,8 @@ extension MIDIObjectRef {
     /// 1 = device is offline (is temporarily absent), 0 = present. Set by the owning driver, on
     /// the device; should not be touched by other clients. Property is inherited from the
     /// device by its entities and endpoints.
-    var offline : Int? {
-        return int(for: kMIDIPropertyOffline)
+    var isOffline : Bool? {
+        return int(for: kMIDIPropertyOffline) == 1
     }
 
     
@@ -211,8 +221,8 @@ extension MIDIObjectRef {
     /// 1 = endpoint is private, hidden from other clients. May be set on a device or entity,
     /// but they will still appear in the API; only affects whether the owned endpoints are
     /// hidden.
-    var isPrivate : Int? {
-        return int(for: kMIDIPropertyPrivate)
+    var isPrivate : Bool? {
+        return int(for: kMIDIPropertyPrivate) == 1
     }
 
     
@@ -226,8 +236,7 @@ extension MIDIObjectRef {
     }
 
 
-    
-}
+
 
 //=============================================================================
 //	Property name constants
@@ -486,15 +495,18 @@ extension MIDIObjectRef {
 //@available(OSX 10.4, *)
 //public let kMIDIPropertySupportsShowControl: CFString
 //
-///*!
-//	@constant		kMIDIPropertyDisplayName
-//	@discussion
-// device/entity/endpoint property, string.
-// 
-// Provides the Apple-recommended user-visible name for an endpoint, by combining the
-// device and endpoint names.
-// 
-// For objects other than endpoints, the display name is the same as the name.
-// */
-//@available(OSX 10.4, *)
-//public let kMIDIPropertyDisplayName: CFString
+
+
+    /// @constant		kMIDIPropertyDisplayName
+    /// @discussion
+    /// device/entity/endpoint property, string.
+    
+    /// Provides the Apple-recommended user-visible name for an endpoint, by combining the
+    /// device and endpoint names.
+    
+    /// For objects other than endpoints, the display name is the same as the name.
+    var displayName: String? {
+        return string(for: kMIDIPropertyDisplayName)
+    }
+
+}
