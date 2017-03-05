@@ -74,6 +74,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8295AADD1E6C7F4C001AF6E3 /* Seed */ = {
+			isa = PBXGroup;
+			children = (
+				82C6D6CD1E665EA40061BBD9 /* MIDIObjectRef+seed.swift */,
+			);
+			path = Seed;
+			sourceTree = "<group>";
+		};
 		82ACDFB21E5D244800ADFAE4 = {
 			isa = PBXGroup;
 			children = (
@@ -97,9 +105,9 @@
 		82ACDFBD1E5D244800ADFAE4 /* midiexperiment5 */ = {
 			isa = PBXGroup;
 			children = (
+				8295AADD1E6C7F4C001AF6E3 /* Seed */,
 				82ACDFBE1E5D244800ADFAE4 /* AppDelegate.swift */,
 				82ACDFC01E5D244800ADFAE4 /* ViewController.swift */,
-				82C6D6CD1E665EA40061BBD9 /* MIDIObjectRef+seed.swift */,
 				82ACDFC21E5D244800ADFAE4 /* Assets.xcassets */,
 				82ACDFC41E5D244800ADFAE4 /* Main.storyboard */,
 				82ACDFC71E5D244800ADFAE4 /* Info.plist */,
