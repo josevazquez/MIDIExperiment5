@@ -85,7 +85,25 @@ class ViewController: NSViewController {
         status = MIDIInputPortCreateWithBlock(midiClient, "InputPort" as CFString, &inPort) {
             (packetListPointer, sourceReferencePointer) in
 
+//            MIDIPacket *packet = &packetList->packet[0];
+//            for (int i = 0; i < packetList->numPackets; ++i) {
+//                ...
+//                    packet = MIDIPacketNext(packet);
+//            }
+            
             let packetList:MIDIPacketList = packetListPointer.pointee
+            var packet = packetList.packet
+            var packetPtr = UnsafeMutablePointer<MIDIPacket>(&packet)
+            var data:UnsafeMutablePointer<UInt8>
+
+            for _ in 0..<packetList.numPackets {
+                packet = packetPtr.pointee
+                data = packetPtr.bindMemory(to: UInt8, capacity:3)
+                //data = UnsafePointer<UInt8>(&packet.data)
+                self.receiveMidiMessage(a:data[0], b:data[1], c:data[2])
+                
+                packetPtr = MIDIPacketNext(packetPtr)
+            }
 
             let packetsPointer = pointerToLastField(ptr: packetListPointer, lastFieldType: type(of:packetList.packet),
                                                     outType: MIDIPacket.self, capacity: Int(packetList.numPackets))
