@@ -92,17 +92,19 @@ class ViewController: NSViewController {
 //            }
             
             let packetList:MIDIPacketList = packetListPointer.pointee
+            var packetPtr = pointerToLastField(ptr: packetListPointer, lastFieldType: MIDIPacket.self, outType: MIDIPacket.self, capacity: 1)
             var packet = packetList.packet
-            var packetPtr = UnsafeMutablePointer<MIDIPacket>(&packet)
-            var data:UnsafeMutablePointer<UInt8>
+//            var packetPtr = UnsafeMutablePointer<MIDIPacket>(&packet)
+            var data:UnsafePointer<UInt8>
 
             for _ in 0..<packetList.numPackets {
                 packet = packetPtr.pointee
-                data = packetPtr.bindMemory(to: UInt8, capacity:3)
+                data = pointerToLastField(ptr: packetPtr, lastFieldType: type(of: packet.data), outType: UInt8.self, capacity: 3)
+//                data = packetPtr.bindMemory(to: UInt8, capacity:3)
                 //data = UnsafePointer<UInt8>(&packet.data)
                 self.receiveMidiMessage(a:data[0], b:data[1], c:data[2])
                 
-                packetPtr = MIDIPacketNext(packetPtr)
+                packetPtr = UnsafePointer(MIDIPacketNext(packetPtr))
             }
 
             let packetsPointer = pointerToLastField(ptr: packetListPointer, lastFieldType: type(of:packetList.packet),

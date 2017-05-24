@@ -25,7 +25,7 @@ extension MIDIObjectRef {
     private func string(for property:CFString) -> String? {
         var param: Unmanaged<CFString>?
         if MIDIObjectGetStringProperty(self, property, &param) == noErr {
-            return param?.takeUnretainedValue() as? String
+            return param?.takeUnretainedValue() as String?
         }
         return nil
     }
